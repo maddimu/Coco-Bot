@@ -17,7 +17,8 @@ module.exports = {
                     { name: 'warn', value: 'warn' },
                     { name: 'clear', value: 'clear' },
                     { name: 'role', value: 'role' },
-                    { name: 'setlogs', value: 'setlogs' }
+                    { name: 'antiraid', value: 'antiraid' },
+                    { name: 'antibot', value: 'antibot' }
                 )),
 
     async execute(interaction) {
@@ -62,6 +63,11 @@ async function showGeneralHelp(interaction) {
             {
                 name: `${getRandomEmoji()} **Channel & Role Management**`,
                 value: '`/createchannel` - Create new channels with categories\n`/managechannel` - Edit or delete channels\n`/createrole` - Create new roles with colors',
+                inline: false
+            },
+            {
+                name: `${getRandomEmoji()} **Security Protection**`,
+                value: '`/antiraid [on/off]` - Detect suspicious mass actions\n`/antibot [on/off]` - Prevent unauthorized bots from joining',
                 inline: false
             },
             {
@@ -196,6 +202,28 @@ async function showCommandDetails(interaction, commandName) {
                 { name: 'Required Permission', value: 'Manage Roles', inline: true },
                 { name: 'Bot Permission', value: 'Manage Roles', inline: true },
                 { name: 'Color Examples', value: '• Hex: #FF0000, #00FF00\n• Names: red, blue, green, purple\n• Case insensitive', inline: false }
+            ]
+        },
+        antiraid: {
+            title: '🛡️ Anti-Raid Protection',
+            description: 'Toggle protection against mass suspicious activities',
+            usage: '/antiraid <on|off>',
+            fields: [
+                { name: 'Protection Features', value: '• Mass join detection (10+ users in 1 minute)\n• Message spam detection (15+ messages in 10 seconds)\n• Automatic alerts to moderators\n• Temporary user timeouts for spam', inline: false },
+                { name: 'Required Permission', value: 'Administrator', inline: true },
+                { name: 'Bot Permission', value: 'Moderate Members, Manage Messages', inline: true },
+                { name: 'How it Works', value: 'Monitors server activity and sends alerts to mod-log channels when suspicious patterns are detected', inline: false }
+            ]
+        },
+        antibot: {
+            title: '🤖 Anti-Bot Protection',
+            description: 'Prevent unauthorized bots from joining your server',
+            usage: '/antibot <on|off>',
+            fields: [
+                { name: 'Protection Features', value: '• Automatic bot detection\n• Unauthorized bot removal\n• Bot join notifications\n• Whitelist system for approved bots', inline: false },
+                { name: 'Required Permission', value: 'Administrator', inline: true },
+                { name: 'Bot Permission', value: 'Kick Members', inline: true },
+                { name: 'Exceptions', value: '• Bots with Administrator permissions are allowed\n• Whitelisted bots (like this moderation bot) are allowed\n• All activity is logged to mod-log channels', inline: false }
             ]
         }
     };

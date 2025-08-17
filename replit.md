@@ -48,6 +48,7 @@ Preferred communication style: Simple, everyday language.
 - **Channel Creation**: Create new channels with types, categories, and descriptions
 - **Role Creation**: Create roles with custom colors, names, and permissions
 - **Channel Management**: Edit and delete existing channels with full control
+- **Security Protection**: Anti-raid and anti-bot protection with real-time monitoring
 - **Help System**: Interactive help with general overview and command-specific details
 
 ## External Dependencies
