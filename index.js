@@ -86,54 +86,7 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-// Import logging utilities
-const {
-    logMemberJoin,
-    logMemberLeave,
-    logMemberRoleUpdate,
-    logMessageDelete,
-    logMessageEdit,
-    logNicknameUpdate,
-    logChannelCreate,
-    logChannelDelete,
-    logVoiceStateUpdate
-} = require('./utils/logManager');
-
-// Event listeners for general logging
-client.on('guildMemberAdd', async (member) => {
-    await logMemberJoin(member);
-});
-
-client.on('guildMemberRemove', async (member) => {
-    await logMemberLeave(member);
-});
-
-client.on('guildMemberUpdate', async (oldMember, newMember) => {
-    await logMemberRoleUpdate(oldMember, newMember);
-    await logNicknameUpdate(oldMember, newMember);
-});
-
-client.on('messageDelete', async (message) => {
-    if (message.partial) return; // Ignore partial messages
-    await logMessageDelete(message);
-});
-
-client.on('messageUpdate', async (oldMessage, newMessage) => {
-    if (oldMessage.partial || newMessage.partial) return; // Ignore partial messages
-    await logMessageEdit(oldMessage, newMessage);
-});
-
-client.on('channelCreate', async (channel) => {
-    await logChannelCreate(channel);
-});
-
-client.on('channelDelete', async (channel) => {
-    await logChannelDelete(channel);
-});
-
-client.on('voiceStateUpdate', async (oldState, newState) => {
-    await logVoiceStateUpdate(oldState, newState);
-});
+// Bot is ready for moderation and server management!
 
 // Error handling
 client.on('error', error => {
