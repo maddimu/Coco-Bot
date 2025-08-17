@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { checkPermissions } = require('../utils/permissions');
-const { logAction } = require('../utils/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -87,7 +86,7 @@ module.exports = {
                 ? `Cleared ${deletedCount} messages from ${targetUser.tag}`
                 : `Cleared ${deletedCount} messages`;
             
-            logAction('CLEAR', interaction.user, targetUser, reason, interaction.guild, { messageCount: deletedCount });
+
 
             // Create response message
             let responseMessage = `✅ Successfully deleted **${deletedCount}** message${deletedCount !== 1 ? 's' : ''}`;

@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 const { checkPermissions } = require('../utils/permissions');
-const { logAction } = require('../utils/logger');
 const { getRandomColor, getRandomEmoji } = require('../utils/colorManager');
 const fs = require('fs');
 const path = require('path');
@@ -149,7 +148,7 @@ async function handleAddWarning(interaction, warnings) {
     saveWarnings(warnings);
 
     // Log the action
-    logAction('WARN_ADD', interaction.user, user, reason, interaction.guild);
+
 
     // Reply with success
     await interaction.reply({
@@ -217,7 +216,7 @@ async function handleRemoveWarning(interaction, warnings) {
     saveWarnings(warnings);
 
     // Log the action
-    logAction('WARN_REMOVE', interaction.user, user, `Removed warning: ${removedWarning.reason}`, interaction.guild);
+
 
     await interaction.reply({
         content: `✅ Warning #${warningId} removed from **${user.tag}**!\n**Removed warning:** ${removedWarning.reason}`,
@@ -244,7 +243,7 @@ async function handleClearWarnings(interaction, warnings) {
     saveWarnings(warnings);
 
     // Log the action
-    logAction('WARN_CLEAR', interaction.user, user, `Cleared ${warningCount} warnings`, interaction.guild);
+
 
     await interaction.reply({
         content: `✅ All warnings cleared for **${user.tag}**! (${warningCount} warnings removed)`,

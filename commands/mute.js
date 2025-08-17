@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { checkPermissions } = require('../utils/permissions');
-const { logAction } = require('../utils/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -100,7 +99,7 @@ module.exports = {
             await member.roles.add(mutedRole, `${reason} | Muted by ${interaction.user.tag}`);
 
             // Log the action
-            logAction('MUTE', interaction.user, user, reason, interaction.guild);
+
 
             // Reply with success
             await interaction.reply({

@@ -60,8 +60,13 @@ async function showGeneralHelp(interaction) {
                 inline: false
             },
             {
-                name: `${getRandomEmoji()} **Help & Configuration**`,
-                value: '`/help` - Show this help message\n`/help [command]` - Get detailed info about a command\n`/setlogs` - Configure logging channels',
+                name: `${getRandomEmoji()} **Channel & Role Management**`,
+                value: '`/createchannel` - Create new channels with categories\n`/managechannel` - Edit or delete channels\n`/createrole` - Create new roles with colors',
+                inline: false
+            },
+            {
+                name: `${getRandomEmoji()} **Help**`,
+                value: '`/help` - Show this help message\n`/help [command]` - Get detailed info about a command',
                 inline: false
             }
         )
@@ -160,16 +165,37 @@ async function showCommandDetails(interaction, commandName) {
                 { name: 'Hierarchy Rules', value: '• Cannot manage roles higher than your highest role\n• Cannot manage bot roles or integration roles\n• Cannot manage @everyone role', inline: false }
             ]
         },
-        setlogs: {
-            title: '📋 Logging Configuration',
-            description: 'Configure logging channels for different types of events',
-            usage: '/setlogs <general|moderation|view|disable> [options]',
+        createchannel: {
+            title: '📝 Create Channel',
+            description: 'Create new channels with different types and categories',
+            usage: '/createchannel <name> <type> [category] [description]',
             fields: [
-                { name: 'Subcommands', value: '• `general` - Set channel for general logs (joins, leaves, messages)\n• `moderation` - Set channel for moderation logs (bans, warnings)\n• `view` - View current logging configuration\n• `disable` - Disable specific or all logging', inline: false },
-                { name: 'Required Permission', value: 'Administrator', inline: true },
-                { name: 'Bot Permission', value: 'Send Messages, Embed Links', inline: true },
-                { name: 'General Logs Include', value: '• User joins/leaves\n• Role changes\n• Channel updates\n• Message edits/deletes\n• Nickname changes\n• Voice activity', inline: false },
-                { name: 'Moderation Logs Include', value: '• Bans/Unbans\n• Kicks\n• Mutes/Timeouts\n• Warnings\n• Role management\n• Message clears', inline: false }
+                { name: 'Parameters', value: '• `name` - Channel name (required)\n• `type` - text/voice/category/forum/announcement (required)\n• `category` - Parent category (optional)\n• `description` - Channel topic/description (optional)', inline: false },
+                { name: 'Required Permission', value: 'Manage Channels', inline: true },
+                { name: 'Bot Permission', value: 'Manage Channels', inline: true },
+                { name: 'Channel Types', value: '• Text - Standard text chat\n• Voice - Voice communication\n• Category - Organize channels\n• Forum - Discussion threads\n• Announcement - Server announcements', inline: false }
+            ]
+        },
+        managechannel: {
+            title: '⚙️ Manage Channel',
+            description: 'Edit or delete existing channels',
+            usage: '/managechannel <delete|edit> <channel> [options]',
+            fields: [
+                { name: 'Subcommands', value: '• `delete` - Remove a channel permanently\n• `edit` - Modify channel settings', inline: false },
+                { name: 'Required Permission', value: 'Manage Channels', inline: true },
+                { name: 'Bot Permission', value: 'Manage Channels', inline: true },
+                { name: 'Edit Options', value: '• Change channel name\n• Update description/topic\n• Move to different category\n• Provide reason for changes', inline: false }
+            ]
+        },
+        createrole: {
+            title: '🎭 Create Role',
+            description: 'Create new roles with custom colors and settings',
+            usage: '/createrole <name> [color] [mentionable] [hoist]',
+            fields: [
+                { name: 'Parameters', value: '• `name` - Role name (required)\n• `color` - Hex code or color name (optional)\n• `mentionable` - Can be @mentioned (optional)\n• `hoist` - Display separately in member list (optional)', inline: false },
+                { name: 'Required Permission', value: 'Manage Roles', inline: true },
+                { name: 'Bot Permission', value: 'Manage Roles', inline: true },
+                { name: 'Color Examples', value: '• Hex: #FF0000, #00FF00\n• Names: red, blue, green, purple\n• Case insensitive', inline: false }
             ]
         }
     };

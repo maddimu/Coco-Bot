@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a Discord moderation bot built with Discord.js v14 that provides comprehensive server moderation capabilities. The bot implements slash commands for user management, warning systems, message moderation, and role management. It features proper permission checking, action logging, and persistent data storage for warnings. The bot is designed to help server administrators maintain order and enforce rules through automated moderation tools.
+This is a Discord moderation bot built with Discord.js v14 that provides comprehensive server management capabilities. The bot implements slash commands for user moderation, channel creation, role management, and server administration. It features a colorful aesthetic with random color palettes and cute emojis, proper permission checking, and persistent data storage for warnings. The bot is designed to help server administrators manage their communities with easy-to-use creation tools and moderation features.
 
 ## User Preferences
 
@@ -34,20 +34,20 @@ Preferred communication style: Simple, everyday language.
 - **Synchronous File Operations**: Direct file I/O for simplicity and reliability
 - **Data Schema**: Warnings include ID, reason, moderator info, and timestamps
 
-### Logging System
-- **Dual Channel Logging**: Separate channels for general server events and moderation actions
-- **General Event Logging**: Member joins/leaves, role changes, message edits/deletes, channel updates, voice activity
-- **Moderation Action Logging**: Detailed logs for bans, kicks, warnings, timeouts, role management with embeds
-- **Console Logging**: Color-coded action logs with timestamps and context
-- **Configurable Setup**: `/setlogs` command for easy channel configuration and management
-- **Rich Embed Format**: Color-coded embeds with user avatars, timestamps, and detailed information
+### Visual Theme System
+- **Random Color Palette**: Uses custom colors (#ffc0c9, #bcf0f3, #d7fdff, #fff9c3) for all embeds
+- **Cute Emoji Integration**: Random selection from collection (🍬🍡🍥🪷⭐️☀️🌈🍒🍭🍧🎨🧸🎀)
+- **Consistent Aesthetics**: All embeds feature colorful themes with matching emojis
+- **Color Manager Utility**: Centralized system for random color and emoji selection
 
 ### Command Categories
 - **User Moderation**: Ban, kick, mute, timeout commands with duration and reason support
 - **Warning System**: Add, list, remove, and clear warnings with persistent storage
 - **Message Management**: Bulk message deletion with user filtering
 - **Role Management**: Add/remove roles with proper hierarchy checking
-- **Logging System**: Configure separate channels for general and moderation logs
+- **Channel Creation**: Create new channels with types, categories, and descriptions
+- **Role Creation**: Create roles with custom colors, names, and permissions
+- **Channel Management**: Edit and delete existing channels with full control
 - **Help System**: Interactive help with general overview and command-specific details
 
 ## External Dependencies

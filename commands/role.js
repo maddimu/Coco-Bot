@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { checkPermissions } = require('../utils/permissions');
-const { logAction } = require('../utils/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -127,7 +126,7 @@ module.exports = {
                 await member.roles.add(role, `${reason} | Added by ${interaction.user.tag}`);
 
                 // Log the action
-                logAction('ROLE_ADD', interaction.user, user, reason, interaction.guild, { role: role.name });
+
 
                 await interaction.reply({
                     content: `✅ Added the **${role.name}** role to **${user.tag}**!\n**Reason:** ${reason}`,
@@ -147,7 +146,7 @@ module.exports = {
                 await member.roles.remove(role, `${reason} | Removed by ${interaction.user.tag}`);
 
                 // Log the action
-                logAction('ROLE_REMOVE', interaction.user, user, reason, interaction.guild, { role: role.name });
+
 
                 await interaction.reply({
                     content: `✅ Removed the **${role.name}** role from **${user.tag}**!\n**Reason:** ${reason}`,

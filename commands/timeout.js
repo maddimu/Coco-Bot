@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { checkPermissions } = require('../utils/permissions');
-const { logAction } = require('../utils/logger');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -97,7 +96,7 @@ module.exports = {
             }
 
             // Log the action
-            logAction('TIMEOUT', interaction.user, user, reason, interaction.guild, { duration: durationText });
+
 
             // Reply with success
             await interaction.reply({
