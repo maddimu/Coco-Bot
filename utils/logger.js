@@ -8,8 +8,9 @@ const path = require('path');
  * @param {User} target - The target user (can be null for some actions)
  * @param {string} reason - The reason for the action
  * @param {Guild} guild - The guild where the action occurred
+ * @param {Object} additionalInfo - Additional information for logging
  */
-function logAction(action, moderator, target, reason, guild) {
+function logAction(action, moderator, target, reason, guild, additionalInfo = {}) {
     const timestamp = new Date().toISOString();
     const targetInfo = target ? ` on ${target.tag} (${target.id})` : '';
     
@@ -35,6 +36,11 @@ function logAction(action, moderator, target, reason, guild) {
     const color = colors[action] || '\x1b[37m'; // Default to white
     
     console.log(`${color}📋 ${logMessage}${resetColor}`);
+    
+    // Send to moderation log channel
+    const { sendModerationLog, createModerationLog } = require('./logManager');
+    const embed = createModerationLog(action, moderator, target, reason, additionalInfo);
+    sendModerationLog(guild, embed);
     
     // Optionally log to file (uncomment if you want file logging)
     /*

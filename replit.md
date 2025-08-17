@@ -35,16 +35,19 @@ Preferred communication style: Simple, everyday language.
 - **Data Schema**: Warnings include ID, reason, moderator info, and timestamps
 
 ### Logging System
+- **Dual Channel Logging**: Separate channels for general server events and moderation actions
+- **General Event Logging**: Member joins/leaves, role changes, message edits/deletes, channel updates, voice activity
+- **Moderation Action Logging**: Detailed logs for bans, kicks, warnings, timeouts, role management with embeds
 - **Console Logging**: Color-coded action logs with timestamps and context
-- **Action Tracking**: Comprehensive logging for all moderation actions
-- **Optional File Logging**: Commented code for persistent log files
-- **Structured Log Format**: Standardized format with action type, users, and reasons
+- **Configurable Setup**: `/setlogs` command for easy channel configuration and management
+- **Rich Embed Format**: Color-coded embeds with user avatars, timestamps, and detailed information
 
 ### Command Categories
 - **User Moderation**: Ban, kick, mute, timeout commands with duration and reason support
 - **Warning System**: Add, list, remove, and clear warnings with persistent storage
 - **Message Management**: Bulk message deletion with user filtering
 - **Role Management**: Add/remove roles with proper hierarchy checking
+- **Logging System**: Configure separate channels for general and moderation logs
 - **Help System**: Interactive help with general overview and command-specific details
 
 ## External Dependencies

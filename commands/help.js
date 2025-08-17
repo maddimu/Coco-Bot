@@ -15,7 +15,8 @@ module.exports = {
                     { name: 'timeout', value: 'timeout' },
                     { name: 'warn', value: 'warn' },
                     { name: 'clear', value: 'clear' },
-                    { name: 'role', value: 'role' }
+                    { name: 'role', value: 'role' },
+                    { name: 'setlogs', value: 'setlogs' }
                 )),
 
     async execute(interaction) {
@@ -58,8 +59,8 @@ async function showGeneralHelp(interaction) {
                 inline: false
             },
             {
-                name: '❓ **Help & Info**',
-                value: '`/help` - Show this help message\n`/help [command]` - Get detailed info about a command',
+                name: '❓ **Help & Configuration**',
+                value: '`/help` - Show this help message\n`/help [command]` - Get detailed info about a command\n`/setlogs` - Configure logging channels',
                 inline: false
             }
         )
@@ -156,6 +157,18 @@ async function showCommandDetails(interaction, commandName) {
                 { name: 'Required Permission', value: 'Manage Roles', inline: true },
                 { name: 'Bot Permission', value: 'Manage Roles', inline: true },
                 { name: 'Hierarchy Rules', value: '• Cannot manage roles higher than your highest role\n• Cannot manage bot roles or integration roles\n• Cannot manage @everyone role', inline: false }
+            ]
+        },
+        setlogs: {
+            title: '📋 Logging Configuration',
+            description: 'Configure logging channels for different types of events',
+            usage: '/setlogs <general|moderation|view|disable> [options]',
+            fields: [
+                { name: 'Subcommands', value: '• `general` - Set channel for general logs (joins, leaves, messages)\n• `moderation` - Set channel for moderation logs (bans, warnings)\n• `view` - View current logging configuration\n• `disable` - Disable specific or all logging', inline: false },
+                { name: 'Required Permission', value: 'Administrator', inline: true },
+                { name: 'Bot Permission', value: 'Send Messages, Embed Links', inline: true },
+                { name: 'General Logs Include', value: '• User joins/leaves\n• Role changes\n• Channel updates\n• Message edits/deletes\n• Nickname changes\n• Voice activity', inline: false },
+                { name: 'Moderation Logs Include', value: '• Bans/Unbans\n• Kicks\n• Mutes/Timeouts\n• Warnings\n• Role management\n• Message clears', inline: false }
             ]
         }
     };

@@ -84,10 +84,10 @@ module.exports = {
 
             // Log the action
             const logMessage = targetUser 
-                ? `Cleared ${deletedCount} messages from ${targetUser.tag}. Reason: ${reason}`
-                : `Cleared ${deletedCount} messages. Reason: ${reason}`;
+                ? `Cleared ${deletedCount} messages from ${targetUser.tag}`
+                : `Cleared ${deletedCount} messages`;
             
-            logAction('CLEAR', interaction.user, null, logMessage, interaction.guild);
+            logAction('CLEAR', interaction.user, targetUser, reason, interaction.guild, { messageCount: deletedCount });
 
             // Create response message
             let responseMessage = `✅ Successfully deleted **${deletedCount}** message${deletedCount !== 1 ? 's' : ''}`;

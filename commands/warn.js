@@ -148,7 +148,7 @@ async function handleAddWarning(interaction, warnings) {
     saveWarnings(warnings);
 
     // Log the action
-    logAction('WARN', interaction.user, user, reason, interaction.guild);
+    logAction('WARN_ADD', interaction.user, user, reason, interaction.guild);
 
     // Reply with success
     await interaction.reply({

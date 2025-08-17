@@ -85,10 +85,7 @@ module.exports = {
             // Timeout the user
             await member.timeout(timeoutDuration, `${reason} | Timed out by ${interaction.user.tag}`);
 
-            // Log the action
-            logAction('TIMEOUT', interaction.user, user, `${reason} (${duration} minutes)`, interaction.guild);
-
-            // Format duration for display
+            // Format duration for display and logging
             const hours = Math.floor(duration / 60);
             const minutes = duration % 60;
             let durationText = '';
@@ -98,6 +95,9 @@ module.exports = {
             } else {
                 durationText = `${minutes} minute${minutes !== 1 ? 's' : ''}`;
             }
+
+            // Log the action
+            logAction('TIMEOUT', interaction.user, user, reason, interaction.guild, { duration: durationText });
 
             // Reply with success
             await interaction.reply({
