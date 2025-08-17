@@ -1,0 +1,13 @@
+{
+    "example_guild_id": {
+        "example_user_id": [
+            {
+                "id": 1,
+                "reason": "Example warning",
+                "moderator": "ExampleMod#1234",
+                "moderatorId": "123456789",
+                "timestamp": "2024-01-01T00:00:00.000Z"
+            }
+        ]
+    }
+}
