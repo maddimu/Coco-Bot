@@ -35,7 +35,7 @@ async function showGeneralHelp(interaction) {
     const embed = new EmbedBuilder()
         .setTitle('🛡️ Moderation Bot Help')
         .setDescription('Here are all the available moderation commands:')
-        .setColor('#5865F2')
+        .setColor('#FFB6C1')
         .addFields(
             {
                 name: '👮‍♂️ **User Moderation**',
@@ -171,7 +171,7 @@ async function showCommandDetails(interaction, commandName) {
     const embed = new EmbedBuilder()
         .setTitle(details.title)
         .setDescription(details.description)
-        .setColor('#5865F2')
+        .setColor('#FFB6C1')
         .addFields(
             { name: '💻 Usage', value: `\`${details.usage}\``, inline: false },
             ...details.fields

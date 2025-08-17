@@ -174,7 +174,7 @@ async function handleListWarnings(interaction, warnings) {
     const embed = new EmbedBuilder()
         .setTitle(`⚠️ Warnings for ${user.tag}`)
         .setThumbnail(user.displayAvatarURL())
-        .setColor('#FFA500')
+        .setColor('#FFB6C1')
         .setFooter({ text: `Total warnings: ${userWarnings.length}` })
         .setTimestamp();
 
