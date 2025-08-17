@@ -1,6 +1,7 @@
 const { EmbedBuilder, AuditLogEvent } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+const { getRandomColor, getRandomEmoji } = require('./colorManager');
 
 const configPath = path.join(__dirname, '../data/config.json');
 
@@ -54,26 +55,11 @@ async function sendModerationLog(guild, embed) {
 // Create moderation log embed
 function createModerationLog(action, moderator, target, reason, additionalInfo = {}) {
     const embed = new EmbedBuilder()
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .setTimestamp()
         .setFooter({ text: `Moderator ID: ${moderator.id}` });
 
-    const actionEmojis = {
-        BAN: '🔨',
-        UNBAN: '🔓',
-        KICK: '👢',
-        MUTE: '🔇',
-        UNMUTE: '🔊',
-        TIMEOUT: '⏰',
-        WARN_ADD: '⚠️',
-        WARN_REMOVE: '✅',
-        WARN_CLEAR: '🧹',
-        ROLE_ADD: '➕',
-        ROLE_REMOVE: '➖',
-        CLEAR: '🗑️'
-    };
-
-    const emoji = actionEmojis[action] || '📋';
+    const emoji = getRandomEmoji();
     embed.setTitle(`${emoji} ${action.replace('_', ' ').toUpperCase()}`);
 
     if (target) {
@@ -128,11 +114,11 @@ function createModerationLog(action, moderator, target, reason, additionalInfo =
 }
 
 // Create general log embed
-function createGeneralLog(title, description, fields = [], color = '#FFB6C1') {
+function createGeneralLog(title, description, fields = [], color = null) {
     const embed = new EmbedBuilder()
         .setTitle(title)
         .setDescription(description)
-        .setColor(color)
+        .setColor(color || getRandomColor())
         .setTimestamp();
 
     if (fields.length > 0) {
@@ -145,14 +131,13 @@ function createGeneralLog(title, description, fields = [], color = '#FFB6C1') {
 // Log member join
 async function logMemberJoin(member) {
     const embed = createGeneralLog(
-        '👋 Member Joined',
+        `${getRandomEmoji()} Member Joined`,
         `${member.user.tag} joined the server`,
         [
             { name: 'User', value: `${member.user.tag} (${member.user.id})`, inline: true },
             { name: 'Account Created', value: `<t:${Math.floor(member.user.createdTimestamp / 1000)}:R>`, inline: true },
             { name: 'Member Count', value: member.guild.memberCount.toString(), inline: true }
-        ],
-        '#00FF00'
+        ]
     );
 
     if (member.user.avatarURL()) {
@@ -165,14 +150,13 @@ async function logMemberJoin(member) {
 // Log member leave
 async function logMemberLeave(member) {
     const embed = createGeneralLog(
-        '👋 Member Left',
+        `${getRandomEmoji()} Member Left`,
         `${member.user.tag} left the server`,
         [
             { name: 'User', value: `${member.user.tag} (${member.user.id})`, inline: true },
             { name: 'Joined', value: `<t:${Math.floor(member.joinedTimestamp / 1000)}:R>`, inline: true },
             { name: 'Member Count', value: member.guild.memberCount.toString(), inline: true }
-        ],
-        '#FF0000'
+        ]
     );
 
     if (member.user.avatarURL()) {
@@ -209,13 +193,12 @@ async function logMemberRoleUpdate(oldMember, newMember) {
     }
 
     const embed = createGeneralLog(
-        '🎭 Member Role Update',
+        `${getRandomEmoji()} Member Role Update`,
         `${newMember.user.tag}'s roles were updated`,
         [
             { name: 'User', value: `${newMember.user.tag} (${newMember.user.id})`, inline: true },
             ...fields
-        ],
-        '#FFA500'
+        ]
     );
 
     if (newMember.user.avatarURL()) {
@@ -230,14 +213,13 @@ async function logMessageDelete(message) {
     if (message.author.bot) return; // Don't log bot messages
 
     const embed = createGeneralLog(
-        '🗑️ Message Deleted',
+        `${getRandomEmoji()} Message Deleted`,
         `Message by ${message.author.tag} was deleted`,
         [
             { name: 'Author', value: `${message.author.tag} (${message.author.id})`, inline: true },
             { name: 'Channel', value: `${message.channel}`, inline: true },
             { name: 'Content', value: message.content ? (message.content.length > 1024 ? message.content.substring(0, 1021) + '...' : message.content) : '*No text content*', inline: false }
-        ],
-        '#FF4444'
+        ]
     );
 
     if (message.attachments.size > 0) {
@@ -257,7 +239,7 @@ async function logMessageEdit(oldMessage, newMessage) {
     if (oldMessage.content === newMessage.content) return; // No content change
 
     const embed = createGeneralLog(
-        '📝 Message Edited',
+        `${getRandomEmoji()} Message Edited`,
         `Message by ${newMessage.author.tag} was edited`,
         [
             { name: 'Author', value: `${newMessage.author.tag} (${newMessage.author.id})`, inline: true },
@@ -265,8 +247,7 @@ async function logMessageEdit(oldMessage, newMessage) {
             { name: 'Before', value: oldMessage.content ? (oldMessage.content.length > 512 ? oldMessage.content.substring(0, 509) + '...' : oldMessage.content) : '*No text content*', inline: false },
             { name: 'After', value: newMessage.content ? (newMessage.content.length > 512 ? newMessage.content.substring(0, 509) + '...' : newMessage.content) : '*No text content*', inline: false },
             { name: 'Jump to Message', value: `[Click here](${newMessage.url})`, inline: false }
-        ],
-        '#FFAA00'
+        ]
     );
 
     await sendGeneralLog(newMessage.guild, embed);
@@ -277,14 +258,13 @@ async function logNicknameUpdate(oldMember, newMember) {
     if (oldMember.nickname === newMember.nickname) return;
 
     const embed = createGeneralLog(
-        '📝 Nickname Changed',
+        `${getRandomEmoji()} Nickname Changed`,
         `${newMember.user.tag}'s nickname was updated`,
         [
             { name: 'User', value: `${newMember.user.tag} (${newMember.user.id})`, inline: true },
             { name: 'Before', value: oldMember.nickname || 'None', inline: true },
             { name: 'After', value: newMember.nickname || 'None', inline: true }
-        ],
-        '#DDDD00'
+        ]
     );
 
     if (newMember.user.avatarURL()) {
@@ -297,13 +277,12 @@ async function logNicknameUpdate(oldMember, newMember) {
 // Log channel events
 async function logChannelCreate(channel) {
     const embed = createGeneralLog(
-        '🆕 Channel Created',
+        `${getRandomEmoji()} Channel Created`,
         `New channel created: ${channel.name}`,
         [
             { name: 'Channel', value: `${channel} (${channel.id})`, inline: true },
             { name: 'Type', value: channel.type.toString(), inline: true }
-        ],
-        '#00FF00'
+        ]
     );
 
     await sendGeneralLog(channel.guild, embed);
@@ -311,14 +290,13 @@ async function logChannelCreate(channel) {
 
 async function logChannelDelete(channel) {
     const embed = createGeneralLog(
-        '🗑️ Channel Deleted',
+        `${getRandomEmoji()} Channel Deleted`,
         `Channel deleted: ${channel.name}`,
         [
             { name: 'Name', value: channel.name, inline: true },
             { name: 'Type', value: channel.type.toString(), inline: true },
             { name: 'ID', value: channel.id, inline: true }
-        ],
-        '#FF0000'
+        ]
     );
 
     await sendGeneralLog(channel.guild, embed);
@@ -331,40 +309,37 @@ async function logVoiceStateUpdate(oldState, newState) {
     // Joined voice channel
     if (!oldState.channel && newState.channel) {
         const embed = createGeneralLog(
-            '🔊 Voice Channel Join',
+            `${getRandomEmoji()} Voice Channel Join`,
             `${member.user.tag} joined a voice channel`,
             [
                 { name: 'User', value: `${member.user.tag} (${member.user.id})`, inline: true },
                 { name: 'Channel', value: newState.channel.name, inline: true }
-            ],
-            '#00FFFF'
+            ]
         );
         await sendGeneralLog(member.guild, embed);
     }
     // Left voice channel
     else if (oldState.channel && !newState.channel) {
         const embed = createGeneralLog(
-            '🔇 Voice Channel Leave',
+            `${getRandomEmoji()} Voice Channel Leave`,
             `${member.user.tag} left a voice channel`,
             [
                 { name: 'User', value: `${member.user.tag} (${member.user.id})`, inline: true },
                 { name: 'Channel', value: oldState.channel.name, inline: true }
-            ],
-            '#FF00FF'
+            ]
         );
         await sendGeneralLog(member.guild, embed);
     }
     // Moved between channels
     else if (oldState.channel && newState.channel && oldState.channel.id !== newState.channel.id) {
         const embed = createGeneralLog(
-            '🔄 Voice Channel Move',
+            `${getRandomEmoji()} Voice Channel Move`,
             `${member.user.tag} moved between voice channels`,
             [
                 { name: 'User', value: `${member.user.tag} (${member.user.id})`, inline: true },
                 { name: 'From', value: oldState.channel.name, inline: true },
                 { name: 'To', value: newState.channel.name, inline: true }
-            ],
-            '#FFFF00'
+            ]
         );
         await sendGeneralLog(member.guild, embed);
     }

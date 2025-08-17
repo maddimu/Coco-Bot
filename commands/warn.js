@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 const { checkPermissions } = require('../utils/permissions');
 const { logAction } = require('../utils/logger');
+const { getRandomColor, getRandomEmoji } = require('../utils/colorManager');
 const fs = require('fs');
 const path = require('path');
 
@@ -172,9 +173,9 @@ async function handleListWarnings(interaction, warnings) {
     }
 
     const embed = new EmbedBuilder()
-        .setTitle(`⚠️ Warnings for ${user.tag}`)
+        .setTitle(`${getRandomEmoji()} Warnings for ${user.tag}`)
         .setThumbnail(user.displayAvatarURL())
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .setFooter({ text: `Total warnings: ${userWarnings.length}` })
         .setTimestamp();
 

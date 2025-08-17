@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
 const { checkPermissions } = require('../utils/permissions');
+const { getRandomColor, getRandomEmoji } = require('../utils/colorManager');
 const fs = require('fs');
 const path = require('path');
 
@@ -129,23 +130,23 @@ async function handleSetGeneral(interaction, config) {
     saveConfig(config);
 
     const embed = new EmbedBuilder()
-        .setTitle('General Logging Configured')
+        .setTitle(`${getRandomEmoji()} General Logging Configured`)
         .setDescription(`General logs will now be sent to ${channel}`)
         .addFields({
             name: 'Logged Events',
             value: '• User joins/leaves\n• Role changes\n• Channel updates\n• Message edits/deletes\n• Nickname changes\n• Voice channel activity',
             inline: false
         })
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });
 
     // Send test message to the log channel
     const testEmbed = new EmbedBuilder()
-        .setTitle('📋 General Logging Enabled')
+        .setTitle(`${getRandomEmoji()} General Logging Enabled`)
         .setDescription('This channel will now receive general server logs.')
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .setTimestamp();
 
     await channel.send({ embeds: [testEmbed] });
@@ -175,23 +176,23 @@ async function handleSetModeration(interaction, config) {
     saveConfig(config);
 
     const embed = new EmbedBuilder()
-        .setTitle('Moderation Logging Configured')
+        .setTitle(`${getRandomEmoji()} Moderation Logging Configured`)
         .setDescription(`Moderation logs will now be sent to ${channel}`)
         .addFields({
             name: 'Logged Actions',
             value: '• Bans/Unbans\n• Kicks\n• Mutes/Unmutes\n• Timeouts\n• Warnings\n• Role management\n• Message clears',
             inline: false
         })
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });
 
     // Send test message to the log channel
     const testEmbed = new EmbedBuilder()
-        .setTitle('🛡️ Moderation Logging Enabled')
+        .setTitle(`${getRandomEmoji()} Moderation Logging Enabled`)
         .setDescription('This channel will now receive moderation logs.')
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .setTimestamp();
 
     await channel.send({ embeds: [testEmbed] });
@@ -207,8 +208,8 @@ async function handleView(interaction, config) {
         interaction.guild.channels.cache.get(guildConfig.moderationLogChannel) : null;
 
     const embed = new EmbedBuilder()
-        .setTitle('📋 Current Logging Configuration')
-        .setColor('#FFB6C1')
+        .setTitle(`${getRandomEmoji()} Current Logging Configuration`)
+        .setColor(getRandomColor())
         .addFields(
             {
                 name: 'General Logs',

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { getRandomColor, getRandomEmoji } = require('../utils/colorManager');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -34,39 +35,39 @@ module.exports = {
 
 async function showGeneralHelp(interaction) {
     const embed = new EmbedBuilder()
-        .setTitle('🛡️ Moderation Bot Help')
+        .setTitle(`${getRandomEmoji()} Moderation Bot Help`)
         .setDescription('Here are all the available moderation commands:')
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .addFields(
             {
-                name: '👮‍♂️ **User Moderation**',
+                name: `${getRandomEmoji()} **User Moderation**`,
                 value: '`/ban` - Ban a user from the server\n`/kick` - Kick a user from the server\n`/mute` - Mute a user (add muted role)\n`/timeout` - Timeout a user for specified duration',
                 inline: false
             },
             {
-                name: '⚠️ **Warning System**',
+                name: `${getRandomEmoji()} **Warning System**`,
                 value: '`/warn add` - Add a warning to a user\n`/warn list` - View warnings for a user\n`/warn remove` - Remove a specific warning\n`/warn clear` - Clear all warnings for a user',
                 inline: false
             },
             {
-                name: '🗑️ **Message Management**',
+                name: `${getRandomEmoji()} **Message Management**`,
                 value: '`/clear` - Delete multiple messages at once\nSupports filtering by user and bulk deletion',
                 inline: false
             },
             {
-                name: '🎭 **Role Management**',
+                name: `${getRandomEmoji()} **Role Management**`,
                 value: '`/role add` - Add a role to a user\n`/role remove` - Remove a role from a user',
                 inline: false
             },
             {
-                name: '❓ **Help & Configuration**',
+                name: `${getRandomEmoji()} **Help & Configuration**`,
                 value: '`/help` - Show this help message\n`/help [command]` - Get detailed info about a command\n`/setlogs` - Configure logging channels',
                 inline: false
             }
         )
         .addFields(
             {
-                name: '📋 **Required Permissions**',
+                name: `${getRandomEmoji()} **Required Permissions**`,
                 value: 'Most commands require specific permissions. Make sure you have the appropriate role permissions to use moderation commands.',
                 inline: false
             }
@@ -184,7 +185,7 @@ async function showCommandDetails(interaction, commandName) {
     const embed = new EmbedBuilder()
         .setTitle(details.title)
         .setDescription(details.description)
-        .setColor('#FFB6C1')
+        .setColor(getRandomColor())
         .addFields(
             { name: '💻 Usage', value: `\`${details.usage}\``, inline: false },
             ...details.fields
