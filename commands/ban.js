@@ -22,31 +22,29 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const user = interaction.options.getUser('user');
         const reason = interaction.options.getString('reason') || 'No reason provided';
         const deleteMessageDays = interaction.options.getInteger('delete_messages') || 0;
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'BanMembers')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to ban members!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to ban members!'
             });
         }
 
         // Check if trying to ban themselves
         if (user.id === interaction.user.id) {
-            return interaction.reply({
-                content: '❌ You cannot ban yourself!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You cannot ban yourself!'
             });
         }
 
         // Check if trying to ban the bot
         if (user.id === interaction.client.user.id) {
-            return interaction.reply({
-                content: '❌ I cannot ban myself!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ I cannot ban myself!'
             });
         }
 
@@ -56,17 +54,15 @@ module.exports = {
             
             // Check role hierarchy if member exists
             if (member) {
-                if (member.roles.highest.position >= interaction.member.roles.highest.position) {
-                    return interaction.reply({
-                        content: '❌ You cannot ban a user with a role equal to or higher than yours!',
-                        ephemeral: true
+                if (member.roles.highest.position >= interaction.member.roles.highest.position && interaction.guild.ownerId !== interaction.user.id) {
+                    return interaction.editReply({
+                        content: '❌ You cannot ban a user with a role equal to or higher than yours!'
                     });
                 }
 
                 if (!member.bannable) {
-                    return interaction.reply({
-                        content: '❌ I cannot ban this user! They may have higher permissions than me.',
-                        ephemeral: true
+                    return interaction.editReply({
+                        content: '❌ I cannot ban this user! They may have higher permissions than me.'
                     });
                 }
             }
@@ -77,20 +73,15 @@ module.exports = {
                 deleteMessageDays: deleteMessageDays
             });
 
-            // Log the action
-
-
             // Reply with success
-            await interaction.reply({
-                content: `✅ **${user.tag}** has been banned!\n**Reason:** ${reason}`,
-                ephemeral: false
+            await interaction.editReply({
+                content: `✅ **${user.tag}** has been banned!\n**Reason:** ${reason}`
             });
 
         } catch (error) {
             console.error('Error banning user:', error);
-            await interaction.reply({
-                content: '❌ Failed to ban the user. Please check my permissions and try again.',
-                ephemeral: true
+            await interaction.editReply({
+                content: '❌ Failed to ban the user. Please check my permissions and try again.'
             });
         }
     },

@@ -22,27 +22,24 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages),
 
     async execute(interaction) {
+        await interaction.deferReply({ ephemeral: true });
         const amount = interaction.options.getInteger('amount');
         const targetUser = interaction.options.getUser('user');
         const reason = interaction.options.getString('reason') || 'No reason provided';
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'ManageMessages')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to manage messages!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to manage messages!'
             });
         }
 
         // Check if bot can delete messages
         if (!interaction.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) {
-            return interaction.reply({
-                content: '❌ I do not have permission to manage messages in this server!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ I do not have permission to manage messages in this server!'
             });
         }
-
-        await interaction.deferReply({ ephemeral: true });
 
         try {
             // Fetch messages

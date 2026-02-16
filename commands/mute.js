@@ -16,57 +16,52 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const user = interaction.options.getUser('user');
         const reason = interaction.options.getString('reason') || 'No reason provided';
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'ModerateMembers')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to mute members!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to mute members!'
             });
         }
 
         // Check if trying to mute themselves
         if (user.id === interaction.user.id) {
-            return interaction.reply({
-                content: '❌ You cannot mute yourself!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You cannot mute yourself!'
             });
         }
 
         // Check if trying to mute the bot
         if (user.id === interaction.client.user.id) {
-            return interaction.reply({
-                content: '❌ I cannot mute myself!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ I cannot mute myself!'
             });
         }
 
         try {
             // Get the member
-            const member = await interaction.guild.members.fetch(user.id);
+            const member = await interaction.guild.members.fetch(user.id).catch(() => null);
             
             if (!member) {
-                return interaction.reply({
-                    content: '❌ User is not in this server!',
-                    ephemeral: true
+                return interaction.editReply({
+                    content: '❌ User is not in this server!'
                 });
             }
 
             // Check role hierarchy
-            if (member.roles.highest.position >= interaction.member.roles.highest.position) {
-                return interaction.reply({
-                    content: '❌ You cannot mute a user with a role equal to or higher than yours!',
-                    ephemeral: true
+            if (member.roles.highest.position >= interaction.member.roles.highest.position && interaction.guild.ownerId !== interaction.user.id) {
+                return interaction.editReply({
+                    content: '❌ You cannot mute a user with a role equal to or higher than yours!'
                 });
             }
 
             // Check if user is already muted
             if (member.isCommunicationDisabled()) {
-                return interaction.reply({
-                    content: '❌ This user is already muted!',
-                    ephemeral: true
+                return interaction.editReply({
+                    content: '❌ This user is already muted!'
                 });
             }
 
@@ -90,7 +85,7 @@ module.exports = {
                             SendMessages: false,
                             AddReactions: false,
                             Speak: false
-                        });
+                        }).catch(e => console.error(`Error setting permissions for ${channel.name}:`, e));
                     }
                 }
             }
@@ -98,20 +93,15 @@ module.exports = {
             // Add muted role to user
             await member.roles.add(mutedRole, `${reason} | Muted by ${interaction.user.tag}`);
 
-            // Log the action
-
-
             // Reply with success
-            await interaction.reply({
-                content: `✅ **${user.tag}** has been muted!\n**Reason:** ${reason}`,
-                ephemeral: false
+            await interaction.editReply({
+                content: `✅ **${user.tag}** has been muted!\n**Reason:** ${reason}`
             });
 
         } catch (error) {
             console.error('Error muting user:', error);
-            await interaction.reply({
-                content: '❌ Failed to mute the user. Please check my permissions and try again.',
-                ephemeral: true
+            await interaction.editReply({
+                content: '❌ Failed to mute the user. Please check my permissions and try again.'
             });
         }
     },

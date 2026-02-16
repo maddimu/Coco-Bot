@@ -75,13 +75,13 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const subcommand = interaction.options.getSubcommand();
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'ModerateMembers')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to manage warnings!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to manage warnings!'
             });
         }
 
@@ -117,16 +117,14 @@ async function handleAddWarning(interaction, warnings) {
 
     // Check if trying to warn themselves or the bot
     if (user.id === interaction.user.id) {
-        return interaction.reply({
-            content: '❌ You cannot warn yourself!',
-            ephemeral: true
+        return interaction.editReply({
+            content: '❌ You cannot warn yourself!'
         });
     }
 
     if (user.id === interaction.client.user.id) {
-        return interaction.reply({
-            content: '❌ You cannot warn me!',
-            ephemeral: true
+        return interaction.editReply({
+            content: '❌ You cannot warn me!'
         });
     }
 
@@ -147,13 +145,9 @@ async function handleAddWarning(interaction, warnings) {
     warnings[guildId][userId].push(warning);
     saveWarnings(warnings);
 
-    // Log the action
-
-
     // Reply with success
-    await interaction.reply({
-        content: `⚠️ **${user.tag}** has been warned!\n**Reason:** ${reason}\n**Total warnings:** ${warnings[guildId][userId].length}`,
-        ephemeral: false
+    await interaction.editReply({
+        content: `⚠️ **${user.tag}** has been warned!\n**Reason:** ${reason}\n**Total warnings:** ${warnings[guildId][userId].length}`
     });
 }
 
@@ -165,9 +159,8 @@ async function handleListWarnings(interaction, warnings) {
     const userWarnings = warnings[guildId]?.[userId] || [];
 
     if (userWarnings.length === 0) {
-        return interaction.reply({
-            content: `✅ **${user.tag}** has no warnings!`,
-            ephemeral: true
+        return interaction.editReply({
+            content: `✅ **${user.tag}** has no warnings!`
         });
     }
 
@@ -186,7 +179,7 @@ async function handleListWarnings(interaction, warnings) {
         });
     });
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.editReply({ embeds: [embed] });
 }
 
 async function handleRemoveWarning(interaction, warnings) {
@@ -198,29 +191,23 @@ async function handleRemoveWarning(interaction, warnings) {
     const userWarnings = warnings[guildId]?.[userId] || [];
 
     if (userWarnings.length === 0) {
-        return interaction.reply({
-            content: `❌ **${user.tag}** has no warnings to remove!`,
-            ephemeral: true
+        return interaction.editReply({
+            content: `❌ **${user.tag}** has no warnings to remove!`
         });
     }
 
     const warningIndex = userWarnings.findIndex(w => w.id === warningId);
     if (warningIndex === -1) {
-        return interaction.reply({
-            content: `❌ Warning #${warningId} not found for **${user.tag}**!`,
-            ephemeral: true
+        return interaction.editReply({
+            content: `❌ Warning #${warningId} not found for **${user.tag}**!`
         });
     }
 
     const removedWarning = userWarnings.splice(warningIndex, 1)[0];
     saveWarnings(warnings);
 
-    // Log the action
-
-
-    await interaction.reply({
-        content: `✅ Warning #${warningId} removed from **${user.tag}**!\n**Removed warning:** ${removedWarning.reason}`,
-        ephemeral: false
+    await interaction.editReply({
+        content: `✅ Warning #${warningId} removed from **${user.tag}**!\n**Removed warning:** ${removedWarning.reason}`
     });
 }
 
@@ -232,9 +219,8 @@ async function handleClearWarnings(interaction, warnings) {
     const userWarnings = warnings[guildId]?.[userId] || [];
 
     if (userWarnings.length === 0) {
-        return interaction.reply({
-            content: `❌ **${user.tag}** has no warnings to clear!`,
-            ephemeral: true
+        return interaction.editReply({
+            content: `❌ **${user.tag}** has no warnings to clear!`
         });
     }
 
@@ -242,11 +228,7 @@ async function handleClearWarnings(interaction, warnings) {
     warnings[guildId][userId] = [];
     saveWarnings(warnings);
 
-    // Log the action
-
-
-    await interaction.reply({
-        content: `✅ All warnings cleared for **${user.tag}**! (${warningCount} warnings removed)`,
-        ephemeral: false
+    await interaction.editReply({
+        content: `✅ All warnings cleared for **${user.tag}**! (${warningCount} warnings removed)`
     });
 }

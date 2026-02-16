@@ -33,6 +33,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const name = interaction.options.getString('name');
         const type = interaction.options.getString('type');
         const category = interaction.options.getChannel('category');
@@ -40,17 +41,15 @@ module.exports = {
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'ManageChannels')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to manage channels!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to manage channels!'
             });
         }
 
         // Check if bot has permission
         if (!interaction.guild.members.me.permissions.has(PermissionFlagsBits.ManageChannels)) {
-            return interaction.reply({
-                content: '❌ I do not have permission to manage channels in this server!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ I do not have permission to manage channels in this server!'
             });
         }
 
@@ -120,15 +119,12 @@ module.exports = {
                 });
             }
 
-            await interaction.reply({ embeds: [embed] });
-
-
+            await interaction.editReply({ embeds: [embed] });
 
         } catch (error) {
             console.error('Error creating channel:', error);
-            await interaction.reply({
-                content: '❌ An error occurred while creating the channel. Please try again.',
-                ephemeral: true
+            await interaction.editReply({
+                content: '❌ An error occurred while creating the channel. Please try again.'
             });
         }
     },

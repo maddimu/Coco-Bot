@@ -42,12 +42,14 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     async execute(interaction) {
+        // Defer reply
+        await interaction.deferReply();
+
         // Check permissions
         const permissionCheck = await checkPermissions(interaction, 'Administrator');
         if (!permissionCheck.allowed) {
-            return await interaction.reply({
-                content: permissionCheck.message,
-                ephemeral: true
+            return await interaction.editReply({
+                content: permissionCheck.message
             });
         }
 
@@ -92,7 +94,7 @@ module.exports = {
             })
             .setTimestamp();
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
 
         // Set up anti-bot monitoring if enabled
         if (status === 'on') {
@@ -105,7 +107,16 @@ function setupAntiBotMonitoring(client, guildId) {
     // Bot join monitoring
     const botJoinHandler = async (member) => {
         if (member.guild.id !== guildId) return;
-        if (!config[guildId]?.antibot) return;
+        
+        // Reload config
+        let currentConfig = {};
+        try {
+            if (fs.existsSync(configPath)) {
+                currentConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            }
+        } catch (e) {}
+
+        if (!currentConfig[guildId]?.antibot) return;
         if (!member.user.bot) return;
 
         // Allow bots with Administrator permissions

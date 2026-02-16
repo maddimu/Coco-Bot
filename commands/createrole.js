@@ -29,6 +29,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const name = interaction.options.getString('name');
         const color = interaction.options.getString('color');
         const mentionable = interaction.options.getBoolean('mentionable') ?? false;
@@ -37,17 +38,15 @@ module.exports = {
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'ManageRoles')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to manage roles!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to manage roles!'
             });
         }
 
         // Check if bot has permission
         if (!interaction.guild.members.me.permissions.has(PermissionFlagsBits.ManageRoles)) {
-            return interaction.reply({
-                content: '❌ I do not have permission to manage roles in this server!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ I do not have permission to manage roles in this server!'
             });
         }
 
@@ -122,15 +121,12 @@ module.exports = {
                 });
             }
 
-            await interaction.reply({ embeds: [embed] });
-
-
+            await interaction.editReply({ embeds: [embed] });
 
         } catch (error) {
             console.error('Error creating role:', error);
-            await interaction.reply({
-                content: '❌ An error occurred while creating the role. Please check the color format and try again.',
-                ephemeral: true
+            await interaction.editReply({
+                content: '❌ An error occurred while creating the role. Please check the color format and try again.'
             });
         }
     },

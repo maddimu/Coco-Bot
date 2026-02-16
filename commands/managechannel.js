@@ -42,21 +42,20 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const subcommand = interaction.options.getSubcommand();
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'ManageChannels')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to manage channels!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to manage channels!'
             });
         }
 
         // Check if bot has permission
         if (!interaction.guild.members.me.permissions.has(PermissionFlagsBits.ManageChannels)) {
-            return interaction.reply({
-                content: '❌ I do not have permission to manage channels in this server!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ I do not have permission to manage channels in this server!'
             });
         }
 
@@ -78,7 +77,6 @@ async function handleDeleteChannel(interaction) {
 
     try {
         const channelName = channel.name;
-        const channelType = channel.type;
 
         await channel.delete(reason);
 
@@ -93,13 +91,12 @@ async function handleDeleteChannel(interaction) {
             })
             .setTimestamp();
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
 
     } catch (error) {
         console.error('Error deleting channel:', error);
-        await interaction.reply({
-            content: '❌ An error occurred while deleting the channel. I may not have permission to delete this channel.',
-            ephemeral: true
+        await interaction.editReply({
+            content: '❌ An error occurred while deleting the channel. I may not have permission to delete this channel.'
         });
     }
 }
@@ -112,9 +109,8 @@ async function handleEditChannel(interaction) {
     const newCategory = interaction.options.getChannel('category');
 
     if (!newName && !newDescription && !newCategory) {
-        return interaction.reply({
-            content: '❌ You must specify at least one thing to change!',
-            ephemeral: true
+        return interaction.editReply({
+            content: '❌ You must specify at least one thing to change!'
         });
     }
 
@@ -142,13 +138,12 @@ async function handleEditChannel(interaction) {
 
         embed.addFields(fields);
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
 
     } catch (error) {
         console.error('Error editing channel:', error);
-        await interaction.reply({
-            content: '❌ An error occurred while editing the channel. Please check your permissions and try again.',
-            ephemeral: true
+        await interaction.editReply({
+            content: '❌ An error occurred while editing the channel. Please check your permissions and try again.'
         });
     }
 }

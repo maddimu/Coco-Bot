@@ -40,13 +40,13 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageRoles),
 
     async execute(interaction) {
+        await interaction.deferReply();
         const subcommand = interaction.options.getSubcommand();
 
         // Check if user has permission
         if (!checkPermissions(interaction.member, 'ManageRoles')) {
-            return interaction.reply({
-                content: '❌ You do not have permission to manage roles!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You do not have permission to manage roles!'
             });
         }
 
@@ -56,101 +56,84 @@ module.exports = {
 
         // Check if trying to modify themselves
         if (user.id === interaction.user.id && subcommand === 'add') {
-            return interaction.reply({
-                content: '❌ You cannot add roles to yourself!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You cannot add roles to yourself!'
             });
         }
 
         // Check if trying to modify the bot
         if (user.id === interaction.client.user.id) {
-            return interaction.reply({
-                content: '❌ You cannot modify my roles!',
-                ephemeral: true
+            return interaction.editReply({
+                content: '❌ You cannot modify my roles!'
             });
         }
 
         try {
             // Get the member
-            const member = await interaction.guild.members.fetch(user.id);
+            const member = await interaction.guild.members.fetch(user.id).catch(() => null);
             
             if (!member) {
-                return interaction.reply({
-                    content: '❌ User is not in this server!',
-                    ephemeral: true
+                return interaction.editReply({
+                    content: '❌ User is not in this server!'
                 });
             }
 
             // Check role hierarchy - user cannot assign roles higher than their highest role
             if (role.position >= interaction.member.roles.highest.position && interaction.guild.ownerId !== interaction.user.id) {
-                return interaction.reply({
-                    content: '❌ You cannot manage a role that is equal to or higher than your highest role!',
-                    ephemeral: true
+                return interaction.editReply({
+                    content: '❌ You cannot manage a role that is equal to or higher than your highest role!'
                 });
             }
 
             // Check if bot can manage the role
             if (role.position >= interaction.guild.members.me.roles.highest.position) {
-                return interaction.reply({
-                    content: '❌ I cannot manage this role! It is equal to or higher than my highest role.',
-                    ephemeral: true
+                return interaction.editReply({
+                    content: '❌ I cannot manage this role! It is equal to or higher than my highest role.'
                 });
             }
 
             // Check if role is managed by an integration
             if (role.managed) {
-                return interaction.reply({
-                    content: '❌ I cannot manage this role as it is managed by an integration (bot role, boost role, etc.)!',
-                    ephemeral: true
+                return interaction.editReply({
+                    content: '❌ I cannot manage this role as it is managed by an integration (bot role, boost role, etc.)!'
                 });
             }
 
             // Check if role is @everyone
             if (role.id === interaction.guild.id) {
-                return interaction.reply({
-                    content: '❌ I cannot manage the @everyone role!',
-                    ephemeral: true
+                return interaction.editReply({
+                    content: '❌ I cannot manage the @everyone role!'
                 });
             }
 
             if (subcommand === 'add') {
                 // Check if user already has the role
                 if (member.roles.cache.has(role.id)) {
-                    return interaction.reply({
-                        content: `❌ **${user.tag}** already has the **${role.name}** role!`,
-                        ephemeral: true
+                    return interaction.editReply({
+                        content: `❌ **${user.tag}** already has the **${role.name}** role!`
                     });
                 }
 
                 // Add the role
                 await member.roles.add(role, `${reason} | Added by ${interaction.user.tag}`);
 
-                // Log the action
-
-
-                await interaction.reply({
-                    content: `✅ Added the **${role.name}** role to **${user.tag}**!\n**Reason:** ${reason}`,
-                    ephemeral: false
+                await interaction.editReply({
+                    content: `✅ Added the **${role.name}** role to **${user.tag}**!\n**Reason:** ${reason}`
                 });
 
             } else if (subcommand === 'remove') {
                 // Check if user has the role
                 if (!member.roles.cache.has(role.id)) {
-                    return interaction.reply({
-                        content: `❌ **${user.tag}** does not have the **${role.name}** role!`,
-                        ephemeral: true
+                    return interaction.editReply({
+                        content: `❌ **${user.tag}** does not have the **${role.name}** role!`
                     });
                 }
 
                 // Remove the role
                 await member.roles.remove(role, `${reason} | Removed by ${interaction.user.tag}`);
 
-                // Log the action
-
-
-                await interaction.reply({
-                    content: `✅ Removed the **${role.name}** role from **${user.tag}**!\n**Reason:** ${reason}`,
-                    ephemeral: false
+                await interaction.editReply({
+                    content: `✅ Removed the **${role.name}** role from **${user.tag}**!\n**Reason:** ${reason}`
                 });
             }
 
@@ -167,9 +150,8 @@ module.exports = {
                 errorMessage += 'Please check my permissions and role hierarchy.';
             }
 
-            await interaction.reply({
-                content: errorMessage,
-                ephemeral: true
+            await interaction.editReply({
+                content: errorMessage
             });
         }
     },
