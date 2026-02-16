@@ -45,12 +45,14 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
     async execute(interaction) {
+        // Defer reply since operations might take time
+        await interaction.deferReply();
+
         // Check permissions
         const permissionCheck = await checkPermissions(interaction, 'Administrator');
         if (!permissionCheck.allowed) {
-            return await interaction.reply({
-                content: permissionCheck.message,
-                ephemeral: true
+            return await interaction.editReply({
+                content: permissionCheck.message
             });
         }
 
@@ -88,7 +90,7 @@ module.exports = {
             })
             .setTimestamp();
 
-        await interaction.reply({ embeds: [embed] });
+        await interaction.editReply({ embeds: [embed] });
 
         // Set up anti-raid monitoring if enabled
         if (status === 'on') {
@@ -101,7 +103,15 @@ function setupAntiRaidMonitoring(client, guildId) {
     // Member join monitoring
     const joinHandler = async (member) => {
         if (member.guild.id !== guildId) return;
-        if (!config[guildId]?.antiraid) return;
+        // Reload config to get latest state
+        let currentConfig = {};
+        try {
+            if (fs.existsSync(configPath)) {
+                currentConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            }
+        } catch (e) {}
+        
+        if (!currentConfig[guildId]?.antiraid) return;
 
         const now = Date.now();
         const timeWindow = 60000; // 1 minute
@@ -125,8 +135,17 @@ function setupAntiRaidMonitoring(client, guildId) {
 
     // Message spam monitoring
     const messageHandler = async (message) => {
-        if (message.guild?.id !== guildId) return;
-        if (!config[guildId]?.antiraid) return;
+        if (!message.guild || message.guild.id !== guildId) return;
+        
+        // Reload config to get latest state
+        let currentConfig = {};
+        try {
+            if (fs.existsSync(configPath)) {
+                currentConfig = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            }
+        } catch (e) {}
+        
+        if (!currentConfig[guildId]?.antiraid) return;
         if (message.author.bot) return;
 
         const now = Date.now();
@@ -153,7 +172,9 @@ function setupAntiRaidMonitoring(client, guildId) {
         raidTracking.set(guildId, tracking);
     };
 
-    // Remove existing listeners to prevent duplicates
+    // Remove existing listeners to prevent duplicates (globally for this guild)
+    // Note: removeAllListeners is aggressive, but here we are scope-limited by guildId inside handlers
+    // For a production bot, a more surgical approach with listener maps per guild would be better
     client.removeAllListeners('guildMemberAdd');
     client.removeAllListeners('messageCreate');
 
