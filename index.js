@@ -1,9 +1,20 @@
 const { Client, Collection, GatewayIntentBits, REST, Routes } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
+const express = require('express');
 require('dotenv').config();
 
+// Servidor web básico para mantener el bot vivo en Render/Replit
+const app = express();
+const PORT = process.env.PORT || 5000;
 
+app.get('/', (req, res) => {
+    res.send('🤖 Bot is running!');
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`🌐 Servidor web iniciado en el puerto ${PORT}`);
+});
 
 // Create a new client instance
 const client = new Client({
@@ -39,7 +50,7 @@ for (const file of commandFiles) {
 }
 
 // When the client is ready
-client.once('ready', async () => {
+client.once('clientReady', async () => {
     console.log(`🤖 Bot is ready! Logged in as ${client.user.tag}`);
     
     // Register slash commands
